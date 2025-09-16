@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Radio, Checkbox } from "antd";
 import { useDispatch, useSelector} from "react-redux";
-import "../../pages/style.css";
+import "../../pages/Style.css";
 import { userLogin } from "../../../redux/thunks/authThunk";
 
 import {setAccessToken, setAuthenticated} from "../../../redux/slices/authSlice"

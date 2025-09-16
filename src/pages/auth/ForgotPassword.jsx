@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Checkbox } from "antd";
-import "../../pages/style.css";
+import "../../pages/Style.css";
 
 const ForgotPassword = () => {
 
