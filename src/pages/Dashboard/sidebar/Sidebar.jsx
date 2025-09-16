@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { sendEmail } from "../../../../redux/thunks/emailThunk"
 import { Image } from "antd"
 
-import Logo from "../../../assets/Logo.jpg"
+import Logo from "../../../assets/logo.jpg"
 
 const Sidebar = ({ active, onSelect, data, open, close }) => {
     const [modalOpen, setModalOpen] = useState(false);

@@ -1,6 +1,6 @@
 import { Form, Image, Input, Button } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
-import Logo from "../../assets/Logo.jpg"
+import Logo from "../../assets/logo.jpg"
 import { logoutApp } from "../../../redux/slices/authSlice"
 
 import { useNavigate } from 'react-router-dom';
