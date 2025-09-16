@@ -7,6 +7,9 @@ import { Image } from "antd"
 
 import Logo from "../../../assets/logo.jpg"
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Sidebar = ({ active, onSelect, data, open, close }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const dispatch = useDispatch();
@@ -77,7 +80,16 @@ const Sidebar = ({ active, onSelect, data, open, close }) => {
             body,
         };
 
-        dispatch(sendEmail(emailData));
+        // dispatch(sendEmail(emailData));
+        dispatch(sendEmail(emailData))
+            .unwrap() // lets you use try/catch with thunks
+            .then(() => {
+                toast.success("Email sent successfully!");
+                onClose();
+            })
+            .catch(() => {
+                toast.error("Failed to send email.");
+            });
         onClose()
     };
 
@@ -128,7 +140,7 @@ const Sidebar = ({ active, onSelect, data, open, close }) => {
 
 
             {/* Compose Modal */}
-            {(modalOpen || open) &&(
+            {(modalOpen || open) && (
 
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
                     <div className="bg-white rounded-lg w-[600px] max-w-[90vw] max-h-[90vh] flex flex-col">

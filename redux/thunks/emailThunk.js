@@ -11,8 +11,7 @@ const sendEmail = createAsyncThunk(
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       });
-
-      if (res.status === 200 && res.data.success === true) {
+      if (res.status === 201 && res.statusText==="Created") {
         return res.data; // success data
       } else {
         return rejectWithValue("Unexpected response.");
@@ -23,8 +22,8 @@ const sendEmail = createAsyncThunk(
         if (error.response.status === 400) {
           return rejectWithValue("Email and Password are required.");
         }
-        if (error.response.status === 401) {
-          return rejectWithValue("Invalid email or password.");
+        if (error.response.status === 404) {
+          return rejectWithValue("email is Invalid");
         }
         return rejectWithValue(error.response.data.message);
       } else if (error.request) {
