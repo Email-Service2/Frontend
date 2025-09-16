@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Radio, Checkbox } from "antd";
 import { useEffect } from "react";
-import "../../pages/style.css";
+import "../../pages/Style.css";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,7 +14,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { loading, error, success } = useSelector((state) => state?.user);
+  const {  error, success } = useSelector((state) => state?.user);
 
   // const handleSignup = async (values) => {
   //   try {
