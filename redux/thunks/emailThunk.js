@@ -11,11 +11,7 @@ const sendEmail = createAsyncThunk(
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       });
-      if (res.status === 201 && res.statusText==="Created") {
-        return res.data; // success data
-      } else {
-        return rejectWithValue("Unexpected response.");
-      }
+      return res.data; 
     } catch (error) {
       if (error.response) {
         // Server responded with a status outside 2xx

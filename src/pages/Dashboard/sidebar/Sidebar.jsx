@@ -88,7 +88,7 @@ const Sidebar = ({ active, onSelect, data, open, close }) => {
                 onClose();
             })
             .catch(() => {
-                toast.success("Email sent successfully");
+                toast.error("Failed to send email.");
             });
     };
 
