@@ -82,15 +82,15 @@ const Sidebar = ({ active, onSelect, data, open, close }) => {
 
         // dispatch(sendEmail(emailData));
         dispatch(sendEmail(emailData))
-            .unwrap() // lets you use try/catch with thunks
+            .unwrap()
             .then(() => {
                 toast.success("Email sent successfully!");
                 onClose();
             })
-            .catch(() => {
-                toast.error("Failed to send email.");
+            .catch((err) => {
+                console.error("Send email error:", err);
+                toast.error(err?.message || "Failed to send email");
             });
-        onClose()
     };
 
 
