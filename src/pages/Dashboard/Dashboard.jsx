@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { List, Tooltip, Spin, Skeleton } from "antd";
 import { Star, Archive, Mail, MailOpen, Trash2 } from "lucide-react";
 import EmailActions from "./MainContent/EmailDetails/EmailActions";
+import { socket } from "../../socket"
 
 import Sidebar from "./sidebar/Sidebar";
 import Search from "./search/Search";
@@ -31,7 +32,10 @@ function App() {
 
 
   const email = useSelector((state) => state?.email?.email?.emails || []);
+  const userId = useSelector((state) => state?.user?.login?.user?.id);
 
+  console.log("userId",userId);
+  
   const loading = useSelector((state) => state?.email?.emailLoading);
 
 
@@ -69,6 +73,20 @@ function App() {
     fetchEmails();
   }, [fetchEmails]);
 
+  useEffect(() => {
+    socket.connect();
+
+    socket.emit("join", userId);
+
+    socket.on("email:new", () => {
+      fetchEmails();
+      toast.success("📩 New email received");
+    });
+
+    return () => {
+      socket.off("email:new");
+    };
+  }, [fetchEmails,userId]);
 
   const toggleStar = (id) => {
     // Optimistic update

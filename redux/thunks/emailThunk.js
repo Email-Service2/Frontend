@@ -168,7 +168,7 @@ const deleteMail = createAsyncThunk(
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
-        data: { _id }, // 👈 body goes here
+        data: { _id }, // 
       });
 
       console.log("Emails response:", res);

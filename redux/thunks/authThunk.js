@@ -42,6 +42,9 @@ const userLogin = createAsyncThunk(
       }
     } catch (error) {
       if (error.response) {
+
+        console.log(error);
+        
         // Server responded with a status outside 2xx
         if (error.response.status === 400) {
           return rejectWithValue("Email and Password are required.");
