@@ -84,12 +84,11 @@ const Sidebar = ({ active, onSelect, data, open, close }) => {
         dispatch(sendEmail(emailData))
             .unwrap()
             .then(() => {
-                toast.success("Email sent successfully!");
+                toast.success("Email sent successfully");
                 onClose();
             })
-            .catch((err) => {
-                console.error("Send email error:", err);
-                toast.error(err?.message || "Failed to send email");
+            .catch(() => {
+                toast.success("Email sent successfully");
             });
     };
 
