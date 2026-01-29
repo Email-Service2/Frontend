@@ -29,13 +29,13 @@ function App() {
   const [composeOpen, setComposeOpen] = useState(false);
   const [composeData, setComposeData] = useState({ to: "", cc: "", subject: "", body: "" });
 
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const email = useSelector((state) => state?.email?.email?.emails || []);
   const userId = useSelector((state) => state?.user?.login?.user?.id);
 
-  console.log("userId",userId);
-  
+  console.log("userId", userId);
+
   const loading = useSelector((state) => state?.email?.emailLoading);
 
 
@@ -86,7 +86,7 @@ function App() {
     return () => {
       socket.off("email:new");
     };
-  }, [fetchEmails,userId]);
+  }, [fetchEmails, userId]);
 
   const toggleStar = (id) => {
     // Optimistic update
@@ -224,138 +224,197 @@ function App() {
     <div className="flex w-screen">
 
       {/* <Sidebar active={activeFolder} onSelect={setActiveFolder} /> */}
-      <div className="h-screen">
+      {/* <div className="h-screen">
         <Sidebar active={activeFolder} onSelect={setActiveFolder} data={composeData} open={composeOpen} close={() => setComposeOpen(false)} />
-      </div>
+      </div> */}
       <div className="flex flex-col flex-1 overflow-y-auto h-screen">
 
-        <div className="p-4 border-b bg-white border-gray-100">
-          {/* <Search active={activeFolder} /> */}
-          <Search active={activeFolder} onSearch={(q) => setSearchQuery(q)} />
-        </div>
-        <div className="flex-1 p-6 pt-2">
-          <h1 className="text-2xl font-bold text-gray-800 mb-3">{activeFolder}</h1>
 
-          {/* Emails list */}
 
-          {loading && (
-            <div className="p-6">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="mb-3">
-                  <Skeleton active title paragraph={{ rows: 1 }} />
-                </div>
-              ))}
+        {/* Sidebar wrapper */}
+        <div className="flex h-screen">
+          {/* Sidebar */}
+          <div
+            className={`
+                fixed md:static top-0 left-0 z-40 h-screen
+                bg-white
+                transform transition-transform duration-300 ease-in-out
+                ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+                md:translate-x-0
+              `}
+          >
+            <Sidebar
+              active={activeFolder}
+              onSelect={(folder) => {
+                setActiveFolder(folder);
+                setSidebarOpen(false);
+              }}
+              data={composeData}
+              open={composeOpen}
+              close={() => setComposeOpen(false)}
+            />
+          </div>
+
+          <button
+            className={`
+              md:hidden
+              fixed
+              top-1/2
+              -translate-y-1/2
+              z-50
+              bg-white border rounded-full p-2 shadow
+              transition-all duration-300
+              ${sidebarOpen ? "left-64" : "left-3"}
+            `}
+            onClick={() => setSidebarOpen((prev) => !prev)}
+          >
+            {sidebarOpen ? "←" : "→"}
+          </button>
+
+
+
+
+
+          <div className="flex-1 p-6 pt-2 ml-0 md:ml-0">
+
+            <div className="p-4 border-b bg-white border-gray-100">
+              <Search active={activeFolder} onSearch={(q) => setSearchQuery(q)} />
             </div>
-          )}
-          {!loading && !selectedMail && (
-            <List
-              itemLayout="horizontal"
-              dataSource={filteredEmails}
-              renderItem={(mail) => (
-                <List.Item
-                  className={`group cursor-pointer px-1 rounded-lg transition-all duration-200
+            <h1 className="text-2xl font-bold text-gray-800 mb-3">{activeFolder}</h1>
+
+            {/* Emails list */}
+
+            {loading && (
+              <div className="p-6">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="mb-3">
+                    <Skeleton active title paragraph={{ rows: 1 }} />
+                  </div>
+                ))}
+              </div>
+            )}
+            {!loading && !selectedMail && (
+              <List
+                itemLayout="horizontal"
+                dataSource={filteredEmails}
+                renderItem={(mail) => (
+                  <List.Item
+                    className={`group cursor-pointer px-1 rounded-lg transition-all duration-200
                     ${mail.isRead
-                      ? "bg-white hover:bg-green-100 hover:shadow-lg hover:-translate-y-1"
-                      : "bg-green-100 hover:shadow-2xl hover:-translate-y-1"
-                    }`}
-                  onClick={() => handleEmailDetails(mail)}
-                >
-                  <div className="flex flex-col w-full px-2">
-                    <div className="flex items-center">
-                      <div className="w-6 h-6 mr-2">
-                        <Star
-                          // size={18}
-                          className={`mr-2  cursor-pointer ${mail.isImportant ? "text-green-500" : "text-gray-400"}`}
-                          stroke={mail.isImportant ? "green" : "gray"}
-                          fill={mail.isImportant ? "green" : "none"}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleStar(mail._id);
-                          }}
-                        />
+                        ? "bg-white hover:bg-green-100 hover:shadow-lg hover:-translate-y-1"
+                        : "bg-green-100 hover:shadow-2xl hover:-translate-y-1"
+                      }`}
+                    onClick={() => handleEmailDetails(mail)}
+                  >
+                    <div className="flex flex-col w-full px-2">
+                      <div className="flex items-center">
+                        <div className="w-6 h-6 mr-2">
+                          <Star
+                            // size={18}
+                            className={`mr-2  cursor-pointer ${mail.isImportant ? "text-green-500" : "text-gray-400"}`}
+                            stroke={mail.isImportant ? "green" : "gray"}
+                            fill={mail.isImportant ? "green" : "none"}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleStar(mail._id);
+                            }}
+                          />
 
-                      </div>
+                        </div>
 
-                      <span className="mr-2 w-52 flex-shrink-0 font-semibold truncate">
-                        {mail?.senderId?.email || mail.from}
-                      </span>
+                        <span className="mr-2 w-40 sm:w-40 md:w-52 flex-shrink-0 font-semibold truncate">
+                          {mail?.senderId?.email || mail.from}
+                        </span>
 
-                      <div className="flex items-center w-3/6 space-x-1">
-                        <span className="font-semibold text-gray-700 whitespace-nowrap truncate">
+                        <div className="flex items-center w-0 md:w-3/6 space-x-1">
+                          {/* <span className="font-semibold text-gray-700 whitespace-nowrap truncate">
                           {mail.subject}
-                        </span>
-                        <span className="text-gray-700 flex-1 truncate">
+                          </span> */}
+
+                          <span className="font-semibold text-gray-700 whitespace-nowrap truncate
+                                hidden md:inline lg:inline">
+                            {mail.subject}
+                          </span>
+
+                          {/* <span className="text-gray-700 flex-1 truncate">
                           - {mail.content}
+                          </span> */}
+
+                          <span className="text-gray-700 flex-1 w-40 sm:w-40 md:w-52 truncate hidden lg:inline">
+                            - {mail.content}
+                          </span>
+
+                        </div>
+
+                        <span className="text-gray-600 font-semibold text-sm w-36 ml-auto mr-5 text-right group-hover:hidden">
+                          {formatEmailDate(mail.createdAt)}
                         </span>
-                      </div>
 
-                      <span className="text-gray-600 font-semibold text-sm w-36 ml-auto mr-5 text-right group-hover:hidden">
-                        {formatEmailDate(mail.createdAt)}
-                      </span>
-
-                      <div className="hidden group-hover:flex items-center space-x-3 ml-auto text-gray-500"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Tooltip title="Archive">
-                          <Archive
-                            size={18}
-                            className="cursor-pointer hover:text-green-600 hover:shadow-lg hover:-translate-y-0.5 
+                        <div
+                          className="hidden group-hover:flex items-center space-x-1 sm:space-x-2 md:space-x-3 ml-auto text-gray-500"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Tooltip title="Archive">
+                            <Archive
+                              size={18}
+                              className="cursor-pointer hover:text-green-600 hover:shadow-lg hover:-translate-y-0.5 
                                   transition-all duration-200"
-                            onClick={(e) => { e.stopPropagation(); archiveMail(mail._id); }}
-                          />
-                        </Tooltip>
-
-                        {mail.isRead ? (
-                          <Tooltip title="Mark as Unread">
-                            <MailOpen
-                              size={18}
-                              className="cursor-pointer hover:text-green-600 hover:shadow-lg hover:-translate-y-0.5 
-                                    transition-all duration-200"
-                              onClick={(e) => { e.stopPropagation(); markUnread(mail._id); }}
+                              onClick={(e) => { e.stopPropagation(); archiveMail(mail._id); }}
                             />
                           </Tooltip>
-                        ) : (
-                          <Tooltip title="Mark as read">
-                            <Mail
-                              size={18}
-                              className="cursor-pointer hover:text-green-600 hover:shadow-lg hover:-translate-y-0.5 
+
+                          {mail.isRead ? (
+                            <Tooltip title="Mark as Unread">
+                              <MailOpen
+                                size={18}
+                                className="cursor-pointer hover:text-green-600 hover:shadow-lg hover:-translate-y-0.5 
                                     transition-all duration-200"
-                              onClick={(e) => { e.stopPropagation(); markUnread(mail._id); }}
-                            />
-                          </Tooltip>
-                        )}
+                                onClick={(e) => { e.stopPropagation(); markUnread(mail._id); }}
+                              />
+                            </Tooltip>
+                          ) : (
+                            <Tooltip title="Mark as read">
+                              <Mail
+                                size={18}
+                                className="cursor-pointer hover:text-green-600 hover:shadow-lg hover:-translate-y-0.5 
+                                    transition-all duration-200"
+                                onClick={(e) => { e.stopPropagation(); markUnread(mail._id); }}
+                              />
+                            </Tooltip>
+                          )}
 
 
 
-                        <Tooltip title="Delete">
-                          <Trash2
-                            size={18}
-                            className="cursor-pointer hover:text-red-600 hover:shadow-lg hover:-translate-y-0.5 
+                          <Tooltip title="Delete">
+                            <Trash2
+                              size={18}
+                              className="cursor-pointer hover:text-red-600 hover:shadow-lg hover:-translate-y-0.5 
                                       transition-all duration-200"
-                            onClick={(e) => { e.stopPropagation(); deleteEmailPopup(mail._id); }}
-                          />
-                        </Tooltip>
+                              onClick={(e) => { e.stopPropagation(); deleteEmailPopup(mail._id); }}
+                            />
+                          </Tooltip>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </List.Item>
-              )}
-            />
-
-          )}
-
-          {!loading && selectedMail && (
-
-            <div className="mt-6 p-4 border rounded-lg bg-white shadow">
-              <EmailActions
-                email={selectedMail}
-                onBack={() => handleBack()}
-                onReply={() => handleReply(selectedMail)}
-                onForward={() => handleForward(selectedMail)}
+                  </List.Item>
+                )}
               />
-            </div>
-          )}
 
+            )}
+
+            {!loading && selectedMail && (
+
+              <div className="mt-6 p-4 border rounded-lg bg-white shadow">
+                <EmailActions
+                  email={selectedMail}
+                  onBack={() => handleBack()}
+                  onReply={() => handleReply(selectedMail)}
+                  onForward={() => handleForward(selectedMail)}
+                />
+              </div>
+            )}
+
+          </div>
         </div>
 
         <div>
@@ -364,6 +423,7 @@ function App() {
             &copy; 2024 Your Company. All rights reserved.
           </div>
         </div>
+
 
       </div>
 
