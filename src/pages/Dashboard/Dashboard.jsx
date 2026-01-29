@@ -29,7 +29,6 @@ function App() {
   const [composeOpen, setComposeOpen] = useState(false);
   const [composeData, setComposeData] = useState({ to: "", cc: "", subject: "", body: "" });
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const email = useSelector((state) => state?.email?.email?.emails || []);
   const userId = useSelector((state) => state?.user?.login?.user?.id);
@@ -233,21 +232,19 @@ function App() {
 
         {/* Sidebar wrapper */}
         <div className="flex h-screen">
-          {/* Sidebar */}
           <div
-            className={`
-                fixed md:static top-0 left-0 z-40 h-screen
-                bg-white
-                transform transition-transform duration-300 ease-in-out
-                ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-                md:translate-x-0
-              `}
+            // className={`
+            //     fixed md:static top-0 left-0 z-40 h-screen
+            //     bg-white
+            //     transform transition-transform duration-300 ease-in-out
+            //     ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+            //     md:translate-x-0
+            //   `}
           >
             <Sidebar
               active={activeFolder}
               onSelect={(folder) => {
                 setActiveFolder(folder);
-                setSidebarOpen(false);
               }}
               data={composeData}
               open={composeOpen}
@@ -255,7 +252,7 @@ function App() {
             />
           </div>
 
-          <button
+          {/* <button
             className={`
               md:hidden
               fixed
@@ -269,7 +266,7 @@ function App() {
             onClick={() => setSidebarOpen((prev) => !prev)}
           >
             {sidebarOpen ? "←" : "→"}
-          </button>
+          </button> */}
 
 
 
@@ -281,8 +278,6 @@ function App() {
               <Search active={activeFolder} onSearch={(q) => setSearchQuery(q)} />
             </div>
             <h1 className="text-2xl font-bold text-gray-800 mb-3">{activeFolder}</h1>
-
-            {/* Emails list */}
 
             {loading && (
               <div className="p-6">
@@ -310,7 +305,6 @@ function App() {
                       <div className="flex items-center">
                         <div className="w-6 h-6 mr-2">
                           <Star
-                            // size={18}
                             className={`mr-2  cursor-pointer ${mail.isImportant ? "text-green-500" : "text-gray-400"}`}
                             stroke={mail.isImportant ? "green" : "gray"}
                             fill={mail.isImportant ? "green" : "none"}
@@ -327,19 +321,14 @@ function App() {
                         </span>
 
                         <div className="flex items-center w-0 md:w-3/6 space-x-1">
-                          {/* <span className="font-semibold text-gray-700 whitespace-nowrap truncate">
-                          {mail.subject}
-                          </span> */}
+                         
 
                           <span className="font-semibold text-gray-700 whitespace-nowrap truncate
                                 hidden md:inline lg:inline">
                             {mail.subject}
                           </span>
 
-                          {/* <span className="text-gray-700 flex-1 truncate">
-                          - {mail.content}
-                          </span> */}
-
+                     
                           <span className="text-gray-700 flex-1 w-40 sm:w-40 md:w-52 truncate hidden lg:inline">
                             - {mail.content}
                           </span>

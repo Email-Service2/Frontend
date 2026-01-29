@@ -120,13 +120,6 @@ const Sidebar = ({ active, onSelect, data, open, close }) => {
                 {renderMenu(bottomMenu)}
             </nav>
 
-            {/* Compose Button */}
-            {/* <div className="p-4">
-                <button onClick={handleCompose} className="flex items-center justify-center w-full py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition">
-                    <Pencil size={16} className="mr-2" /> Compose
-                </button>
-            </div> */}
-
             <div className="p-4">
                 <button
                     onClick={handleCompose}
